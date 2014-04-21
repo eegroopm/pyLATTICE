@@ -1,3 +1,15 @@
+/resources/_diffspot_py2.pyx
+/resources/_dspace_py2.pyx
+/resources/diffspot.c
+/resources/dspace.c
+/resources/diffspot_py2.c
+/resources/dspace_py2.c
+/resources/win64/Csetup.py
+/resources/win64/diffspot.c
+/resources/win64/diffspot.pyx
+/resources/win64/dspace.pyx
+/settings.py
+/matplotlibwidgetFile.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -51,4 +63,21 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+# Spyder projects
+.spyderproject
+
+# Other files
+dspacings.h5
+README.txt
+resources_py2/
+build/
+extra\ resources/
+documentation/
+setup.py
+setup_win.py
+
+# pyinstaller CX_freeze files
+*.spec
+
 
