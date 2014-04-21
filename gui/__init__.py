@@ -65,7 +65,9 @@ def loadUi( modpath, widget ):
     basename = widget.__class__.__name__
     #basename = 'pyLATTICE_GUI_devel'
     #need new path for windows compiled executable with shared library
-    d = os.path.split(basepath)[0] #parent directory
+    d,parent = os.path.split(basepath) #parent directory
+    if parent == 'resources':
+        basepath = os.path.join(d,'gui')
     dnew = os.path.split(d)
     if dnew[1] == 'library.zip':
         basepath = os.path.join(dnew[0],'gui')

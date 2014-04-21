@@ -32,20 +32,13 @@ import numpy as np
 from numpy import linalg
 import pandas as pd
 
-#IPython widget stuff
-from IPython.qt.console.rich_ipython_widget import RichIPythonWidget
-from IPython.qt.inprocess import QtInProcessKernelManager
-from IPython.lib import guisupport
 
 #Matplotlib imports
 import matplotlib as mpl
 mpl.use('Qt4Agg')
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
-from matplotlib.lines import Line2D
-from matplotlib.patches import Patch, Rectangle, Circle, Arrow
 
 # Local files in the resource directory
 import gui
@@ -53,6 +46,11 @@ import resources
 from resources.TableWidget import TableWidget
 from resources.Diffraction import Diffraction
 from resources.pyqtresizer import logit,slResizer,Resizer
+from resources.IPythonConsole import IPythonConsole, QIPythonWidget
+from resources.common import common
+from resources.matplotlibwidget import matplotlibWidget
+from resources.Dialogs import MineralListDialog, NewMineralDialog
+
 
 try:
     from resources.dspace import DSpace
@@ -103,263 +101,8 @@ try:
 except AttributeError:
     _fromUtf8 = lambda s: s
 
-
-class common:
-    def __init__(self):
-        self.path = os.path.expanduser('~')
-        #\u0305 is unicode overline character
-        self.overline_strings = [u'1\u0305', u'2\u0305' ,u'3\u0305', u'4\u0305', u'5\u0305', u'6\u0305', u'7\u0305',u'8\u0305',u'9\u0305']
-        self.DSpaces = pd.DataFrame(columns = ['d-space','h','k','l']) #Msum is sum of absolute miller indices, neede for plotting pattern
-        self.Forbidden = pd.DataFrame(columns = ['d-space','h','k','l'])
-        self.u = 0
-        self.v = 0
-        self.w = 1
-        self.ZoneAxis = np.array([self.u,self.v,self.w])
-        
-        self.beamenergy = 200 #keV
-        self.camlength = 100 #cm
-        self.camconst = 1.0
-        self.wavelength = self.Wavelength(self.beamenergy) #angstroms
-        
-        self.x2 = False
-        self.a = 1
-        
-        #SpaceGroup data
-        #DataFrame in the form SG Number, Patterson symbol, Geometry,Unit Cell Type, Unit Cell Conditions , Spacegroup conditions
-        #e.g.
-        #sg.loc[218] yields:
-            #Patterson    P-43n
-            #Conditions   (h==k and l == 2*n) or (h == 2*n and k==0 and ...
-            #Name: 218, dtype: object
-        if sys.version_info[0] == 3: #python3 and python2 pickle h5 files differently. GAH!!
-            self.sg = pd.read_hdf('resources/SpaceGroups.h5','table')
-            self.sghex = pd.read_hdf('resources/SpaceGroupsHex.h5','table') #for trigonal crystals with rhombohedral or hexagonal centering
-            self.mineraldb = pd.read_hdf('resources/MineralDatabase.h5','table')
-        elif sys.version_info[0] == 2:
-            self.sg = pd.read_hdf('resources/SpaceGroups_py2.h5','table')
-            self.sghex = pd.read_hdf('resources/SpaceGroupsHex_py2.h5','table')
-            self.mineraldb = pd.read_hdf('resources/MineralDatabase_py2.h5','table')
-            
-            
-    def Wavelength(self,E):
-        hbar = 6.626E-34 #m^2 kg/s
-        me = 9.109E-31 #kg
-        c = 3E8 #m/s
-        e = 1.602E-19 #Coulombs
-        E = E*1000 #turn to eV
-        wavelength = hbar/np.sqrt(2*me*e*E)/np.sqrt(1 + (e*E)/(2*me*c**2))*(10**10) #angstroms. relativistic formula
-        return(wavelength)
-
-class MplCanvas(FigureCanvas):
-
-    def __init__(self):
-        self.fig = Figure()
-        self.ax = self.fig.add_subplot(111)
-        super(MplCanvas, self).__init__(self.fig)
-        FigureCanvas.__init__(self, self.fig)
-        FigureCanvas.setSizePolicy(self, QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
-        FigureCanvas.updateGeometry(self)
-        
-        
-
-class matplotlibWidget(QtGui.QWidget):
-    distances = QtCore.pyqtSignal(str,str,str,str)
-    def __init__(self, common, Diffraction, parent = None):
-        QtGui.QWidget.__init__(self, parent)
-        self.update(common,Diffraction)
-        
-        self.canvas = MplCanvas()
-        self.vbl = QtGui.QVBoxLayout()
-        self.vbl.addWidget(self.canvas)
-        self.setLayout(self.vbl)
-        self.Plot_initialize()
-        self.canvas.mpl_connect('pick_event', self.on_pick)
-        self.x1 = None; self.y1 = None
-        
-    def update(self,common,Diffraction):
-        self.common = common
-        self.DSpaces = self.common.DSpaces
-        self.Forbidden = self.common.Forbidden
-        self.u = self.common.u
-        self.v = self.common.v
-        self.w = self.common.w
-        self.E = self.common.beamenergy
-        self.L = self.common.camlength
-        self.const = self.common.camconst
-        self.lam = self.common.wavelength
-        
-        self.ZoneAxis = self.common.ZoneAxis
-        self.Diffraction = Diffraction
-        #self.canvas.mpl_connect('button_press_event', self.on_pick)
-#        
-#    def setupToolbar(self,canvas,frame):
-#        """Setup a custom toolbar"""
-#        # Create the navigation toolbar, tied to the canvas
-#        self.mpl_toolbar = NavigationToolbar(canvas, frame)
-#        #add widgets to toolbar
-#        self.comboBox_rotate = QtGui.QComboBox()
-#        self.checkBox_labels = QtGui.QCheckBox()
-#        self.mpl_toolbar.addWidget(self.comboBox_rotate)
-#        self.mpl_toolbar.addWidget(self.checkBox_labels)
-#        #add toolbar to tabs
-#        self.verticalLayout.addWidget(self.mpl_toolbar)
-        
-        
-    def Plot_initialize(self):
-        """Initialize paramters of Matplotlib widget such as axes labels"""
-        label = u'Distance (\u212B\u207B\u00B9)'
-        self.canvas.ax.set_xlabel(label,fontsize=14)
-        self.canvas.ax.set_ylabel(label,fontsize=14)
-        self.canvas.ax.tick_params(axis='both', which='major', labelsize=14, length=6)
-        #self.Plot.xaxis.set_units(u'Å⁻¹')
-        #self.Plot.yaxis.set_units(u'Å⁻¹')
-        self.canvas.fig.tight_layout()
-        
-    def calc(self,ind1,ind2):
-        """Calculates angles from picks"""
-        
-        p1 = list(self.DSpaces.loc[ind1,['x','y']])
-        p2 = list(self.DSpaces.loc[ind2,['x','y']])
-        
-        recip_d = round(np.sqrt((p2[0]-p1[0])**2 + (p2[1]-p1[1])**2),2) #calc distance
-        real_d = 1/recip_d
-        film_d = self.lam*self.L/real_d*self.const
-        
-        #angle = round(np.degrees(self.Diffraction.AngleAmbiguity(p2[0]-p1[0],p2[1]-p1[1])),1)
-        angle = round(np.degrees(np.arctan2((p2[1]-p1[1]),(p2[0]-p1[0]))),1)
-        
-        return recip_d, real_d,film_d, angle, p1, p2
-        
-    @QtCore.pyqtSlot()
-    def on_done_pick(self,recip_d, real_d,film_d, angle):
-        self.distances.emit(recip_d, real_d,film_d, angle)
-        
-    
-    def on_pick(self, event):
-        # The event received here is of the type
-        # matplotlib.backend_bases.PickEvent
-        #self.DSpaces = self.common.DSpaces
-
-        if isinstance(event.artist, Line2D):
-            thisline = event.artist
-            
-            if self.x1 == None:
-                if self.common.x2:
-                    #Remove recently done circles
-                    self.arr.remove()
-                    del self.arr
-                    l = self.canvas.ax.lines.pop(-1)
-                    del l
-                    l = self.canvas.ax.lines.pop(-1)
-                    del l
-                    self.canvas.draw()
-                    self.common.x2=False
-                self.x1 = thisline.get_xdata()
-                self.y1 = thisline.get_ydata()
-                self.ind1 = event.ind[0]
-                self.canvas.ax.plot(self.x1[self.ind1],self.y1[self.ind1], linestyle = '', marker='o', markersize = 10,color='r')
-                self.canvas.draw()
-                
-                
-            elif self.x1 != None:
-                self.update(self.common,self.Diffraction)
-                self.common.x2 = True
-                self.ind2 = event.ind[0]
-                #make names shorter
-                #x1 = self.x1[self.ind1]; x2 = self.x2[self.ind2]; y1 = self.y1[self.ind1]; y2 = self.y2[self.ind2]
-                recip_d, real_d,film_d, angle, p1, p2 = self.calc(self.ind1,self.ind2)
-                
-                #reset x1 and y1
-                self.x1 = None; self.y1 = None
-                #plot colored circle
-                self.canvas.ax.plot(p2[0],p2[1], linestyle = '', marker='o', markersize = 10,color='r')
-                #plot arrow between selected points
-                self.arr = Arrow(p1[0],p1[1],p2[0]-p1[0],p2[1]-p1[1],facecolor='r',width = 1/(5*self.common.a)) #maybe include factor of miller indices. higher miller = larger x,yrange
-                self.canvas.ax.add_patch(self.arr)
-                self.canvas.draw()
-                
-                self.on_done_pick(str(recip_d), str(round(real_d,2)),str(round(film_d,2)), str(angle))
-                ##Display message information
-                #u'\u212B' is utf-8 angstrom symbol
-                #u'\u207B' is superscript -
-                #u'\u00B9' is utf-8 superscript 1
-#                msg = u'''
-#                Reciprocal Distance is: %.2f \u212B\u207B\u00B9
-#                Real Distance is: %.2f \u212B
-#                Film Distance is: %.2f cm
-#                Angle is: %s degrees''' %(recip_d,real_d,film_d,angle)
-#                #print 'Distance is:', distance, 'inverse anstroms'
-#                #print 'Angle is:', np.degrees(angle), 'degrees'
-#                QtGui.QMessageBox.information(self, "Click!", msg)
-
-###############################################################################
-## Various Input Dialogs ##
-###############################################################################
-class MineralListDialog(QtGui.QDialog):
-    def __init__(self,parent=None):
-        QtGui.QDialog.__init__(self,parent)
-        gui.loadUi(__file__,self)
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-
-class NewMineralDialog(QtGui.QDialog):
-    def __init__(self,parent=None):
-        QtGui.QDialog.__init__(self,parent)
-        gui.loadUi(__file__,self)
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-
-##IPython Widget
-class IPythonConsole(QtGui.QWidget):
-    def __init__(self,parent=None):
-        QtGui.QWidget.__init__(self,parent)
-        gui.loadUi(__file__,self)
-        self.resize=slResizer(self)
-    
-    #for maximizing/resizing console inside of window
-    def resizeEvent(self, ev):
-        #when a resize event occurs at all we need to resize
-        self.resize.refresh()
-
-    def changeEvent(self, ev):
-        if ev.type()==105:
-          #on a maximize screen event we need to resize
-          self.resize.refresh()
-
-class QIPythonWidget(RichIPythonWidget):
-    """ Convenience class for a live IPython console widget. We can replace the standard banner using the customBanner argument"""
-    def __init__(self,customBanner=None,*args,**kwargs):
-        if customBanner!=None: self.banner=customBanner
-        super(QIPythonWidget, self).__init__(*args,**kwargs)
-        self.kernel_manager = kernel_manager = QtInProcessKernelManager()
-        kernel_manager.start_kernel()
-        kernel_manager.kernel.gui = 'qt4'
-        self.kernel_client = kernel_client = self._kernel_manager.client()
-        kernel_client.start_channels()
-        
-        
-        def stop():
-            kernel_client.stop_channels()
-            kernel_manager.shutdown_kernel()
-            guisupport.get_app_qt4().exit()            
-        self.exit_requested.connect(stop)
-
-    def pushVariables(self,variableDict):
-        """ Given a dictionary containing name / value pairs, push those variables to the IPython console widget """
-        self.kernel_manager.kernel.shell.push(variableDict)
-    def clearTerminal(self):
-        """ Clears the terminal """
-        self._control.clear()
-    def printText(self,text):
-        """ Prints some plain text to the console """
-        self._append_plain_text(text)        
-    def executeCommand(self,command):
-        """ Execute a command in the frame of the console widget """
-        self._execute(command,False)
-
 ################################################################################
-## Gui file ##        
-#base, form = uic.loadUiType("pyLATTICE_GUI.ui")
+## Gui file ##
 # Set up window
 class pyLATTICE_GUI(QtGui.QMainWindow):
     
