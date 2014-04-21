@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>icons/diffraction.gif</file>
+    <file>icons/diffspots.jpg</file>
+    <file>icons/diffrings.tif</file>
+  </qresource>
+</RCC>
