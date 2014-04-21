@@ -25,11 +25,10 @@ Created on Wed Apr 11 14:46:56 2012
 
 """
 #Main imports
-import sip
+#import sip
 from PyQt4 import QtCore, QtGui, uic
 import os, re, sys
 import numpy as np
-from numpy import linalg
 import pandas as pd
 
 
@@ -38,14 +37,12 @@ import matplotlib as mpl
 mpl.use('Qt4Agg')
 #import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 
 # Local files in the resource directory
 import gui
-import resources
 from resources.TableWidget import TableWidget
 from resources.Diffraction import Diffraction
-from resources.pyqtresizer import logit,slResizer,Resizer
+#from resources.pyqtresizer import logit,slResizer,Resizer
 from resources.IPythonConsole import IPythonConsole, QIPythonWidget
 from resources.common import common
 from resources.matplotlibwidget import matplotlibWidget
@@ -73,14 +70,14 @@ except ImportError as error:
     print('Building "DiffSpot"')
     
 #need different compiled versions of Cython modules depending on python version
-if sys.version_info[0] == 3:
-    #from resources.dspace import DSpace#Cython function for calculating d-spaces
-    #from resources.diffspot import CalcSpots, CalcSpotsHCP#Cython function for calculating diffraction spot coordinates
-    from resources.pyqtresizer import logit,slResizer,Resizer
-elif sys.version_info[0] == 2:
-    #from resources.dspace_py2 import DSpace#Cython function for calculating d-spaces
-    #from resources.diffspot_py2 import CalcSpots, CalcSpotsHCP#Cython function for calculating diffraction spot coordinates
-    from resources.pyqtresizer_py2 import logit,slResizer,Resizer
+#if sys.version_info[0] == 3:
+#    #from resources.dspace import DSpace#Cython function for calculating d-spaces
+#    #from resources.diffspot import CalcSpots, CalcSpotsHCP#Cython function for calculating diffraction spot coordinates
+#    from resources.pyqtresizer import logit,slResizer,Resizer
+#elif sys.version_info[0] == 2:
+#    #from resources.dspace_py2 import DSpace#Cython function for calculating d-spaces
+#    #from resources.diffspot_py2 import CalcSpots, CalcSpotsHCP#Cython function for calculating diffraction spot coordinates
+#    from resources.pyqtresizer_py2 import logit,slResizer,Resizer
     
 #from Wulff_net import WULFF
 #dealing with unicode characters in windows, which breaks compiled linux rendering
@@ -874,7 +871,7 @@ Imported packages include: numpy as np; pandas as pd; pyplot as plt
             pass
 
     def RemoveForbidden(self,d,sgconditions):
-        h = d['h']; k = d['k']; l = d['l']
+        #h = d['h']; k = d['k']; l = d['l']
         f = pd.DataFrame(columns = ['d-space','h','k','l'])
         try:
             if eval(sgconditions):
