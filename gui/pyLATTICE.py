@@ -890,6 +890,8 @@ Imported packages include: numpy as np; pandas as pd; pyplot as plt
                 else:
                     c = c.lstrip('if').strip()
                     iff, then = c.split(':') #eval doesnt care about spaces
+                    #needed for eval
+                    h = d.h; k = d.k; l = d.l
                     r = d[eval('(' + iff + ')& ~(' + then + ')')]
                     d = d.drop(r.index)
                 f = pd.concat([f,r])
