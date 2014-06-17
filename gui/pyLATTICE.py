@@ -46,7 +46,7 @@ from resources.Diffraction import Diffraction
 from resources.IPythonConsole import IPythonConsole, QIPythonWidget
 from resources.common import common
 from resources.matplotlibwidget import matplotlibWidget
-from resources.Dialogs import MineralListDialog, NewMineralDialog
+from resources.Dialogs import MineralListDialog, NewMineralDialog, ManualConditionsDialog
 
 
 try:
@@ -122,6 +122,7 @@ class pyLATTICE_GUI(QtGui.QMainWindow):
         self.sg = self.common.sg
         self.sghex = self.common.sghex
         self.mineraldb = self.common.mineraldb
+        self.manualConds = self.common.manualConds #manual space group conditions
         
                 
         self.DiffWidget = matplotlibWidget(self.common,self.Diffraction) #mplwidget can access common data
@@ -325,6 +326,7 @@ class pyLATTICE_GUI(QtGui.QMainWindow):
         QtCore.QObject.connect(self.actionLoad_Mineral_Database, QtCore.SIGNAL(_fromUtf8("triggered()")), self.LoadMineralDB)
         QtCore.QObject.connect(self.actionAppendMineral, QtCore.SIGNAL(_fromUtf8("triggered()")), self.AppendMineral)
         QtCore.QObject.connect(self.actionIPython_Console, QtCore.SIGNAL(_fromUtf8("triggered()")), self.IPY)
+        QtCore.QObject.connect(self.actionManualCond, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ManualConditions)
         
         ### Command buttons
         QtCore.QObject.connect(self.command_Plot, QtCore.SIGNAL(_fromUtf8("clicked()")),self.PlotDiffraction)
@@ -549,6 +551,10 @@ Imported packages include: numpy as np; pandas as pd; pyplot as plt
             if not np.isnan(m.c):
                 self.doubleSpinBox_c.setValue(m.c)
                 self.c = m.c
+            try:
+                self.manualConds = m.SpecialConditions.split(';')
+            except AttributeError: #ignore floats or nans
+                self.manualConds = ''
             
             self.MetricTensor()
             #reconnect and calculate
@@ -848,6 +854,13 @@ Imported packages include: numpy as np; pandas as pd; pyplot as plt
             
             #now deal with special spacegroup conditions by removing invalid spots
             sg_conditions = self.SpaceGroupConditions(self.sgnumbers[self.comboBox_spacegroup.currentIndex()])
+            if self.manualConds != []:
+                if sg_conditions == 'True':
+                    sg_conditions = ''
+                for c in self.manualConds:
+                    sg_conditions += ';%s' % c
+                sg_conditions = sg_conditions.lstrip(';')
+            
             self.DSpaces = self.RemoveForbidden(self.DSpaces,sg_conditions)
             
             #sort in descending Dspace order, then by h values, then k, then l...
@@ -876,7 +889,7 @@ Imported packages include: numpy as np; pandas as pd; pyplot as plt
         try:
             if eval(sgconditions):
                 return(d)
-        except SyntaxError: #if sgconditions not 'True'
+        except (KeyError,SyntaxError): #if sgconditions not 'True'
             #d[(h==k) & ~(l%2==0)]
             #d = d.drop(r.index)
             #split multiple conditions up
@@ -949,11 +962,20 @@ Imported packages include: numpy as np; pandas as pd; pyplot as plt
                       'SpaceGroup':int(self.comboBox_spacegroup.currentText().split(':')[0]),
                       'a':self.doubleSpinBox_a.value(),
                       'b':self.doubleSpinBox_b.value(),
-                      'c':self.doubleSpinBox_c.value()}
+                      'c':self.doubleSpinBox_c.value(),
+                      'SpecialConditions':';'.join(self.manualCond)}
             self.mineraldb = self.mineraldb.append(params,ignore_index=True)
         
             self.setMineralList()
         QtCore.QObject.connect(self.comboBox_mineraldb, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.setMineral)
+        
+    def ManualConditions(self):
+        """Raise the manual space group conditions dialog"""
+        dial = ManualConditionsDialog(conditions= self.manualConds)
+        if dial.exec_():
+            num = dial.manualCondList.count()
+            self.manualConds = [dial.manualCondList.item(i).text() for i in range(num)]
+        
         
     def SaveDSpace(self):
         self.Save(self.DSpaces)

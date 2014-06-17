@@ -2643,6 +2643,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionSave_D_spacings"/>
     <addaction name="separator"/>
     <addaction name="actionIPython_Console"/>
+    <addaction name="actionManualCond"/>
     <addaction name="actionClose"/>
    </widget>
    <widget class="QMenu" name="menuMinerals">
@@ -2748,6 +2749,11 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionManualCond">
+   <property name="text">
+    <string>Set Manual SG Conditions</string>
    </property>
   </action>
  </widget>

@@ -10,12 +10,16 @@ __maintainer__  = 'Evan Groopman'
 __email__       = 'eegroopm@gmail.com'
 
 # define version information
-__version_info__    = (0, 2,10)
+__version_info__    = (0, 2,11)
 __version__         = 'v%i.%01i.%03i' % __version_info__
 __revision__        = __version__
 
 """
 Changelog:
+v0.2.11 - 6/17/2014
+- Added dialog to manually add space group conditions for different site symmetries, etc.
+- Update mineral DB to read manual conditions
+
 v0.2.10 - 3/6/2014
 - Added popup IPython console for interacting with data
 

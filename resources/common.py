@@ -43,7 +43,8 @@ class common:
             self.sg = pd.read_hdf('resources/SpaceGroups_py2.h5','table')
             self.sghex = pd.read_hdf('resources/SpaceGroupsHex_py2.h5','table')
             self.mineraldb = pd.read_hdf('resources/MineralDatabase_py2.h5','table')
-            
+        
+        self.manualConds = [] #empty list of strings for manual conditions
             
     def Wavelength(self,E):
         hbar = 6.626E-34 #m^2 kg/s
