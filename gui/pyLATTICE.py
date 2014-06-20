@@ -43,7 +43,7 @@ import gui
 from resources.TableWidget import TableWidget
 from resources.Diffraction import Diffraction
 #from resources.pyqtresizer import logit,slResizer,Resizer
-from resources.IPythonConsole import IPythonConsole, QIPythonWidget
+from resources.IPythonConsole import IPythonConsole
 from resources.common import common
 from resources.matplotlibwidget import matplotlibWidget
 from resources.Dialogs import MineralListDialog, NewMineralDialog, ManualConditionsDialog
@@ -109,21 +109,8 @@ class pyLATTICE_GUI(QtGui.QMainWindow):
         gui.loadUi(__file__,self)
         self.version = gui.__version__
         
-        self.common = common()
+        self._grabCommon()
         self.Diffraction = Diffraction()
-        self.overline_strings = self.common.overline_strings
-        self.DSpaces = self.common.DSpaces
-        self.ZoneAxis = self.common.ZoneAxis
-        self.u = self.common.u
-        self.v = self.common.v
-        self.w = self.common.w
-        
-        #SpaceGroup data
-        self.sg = self.common.sg
-        self.sghex = self.common.sghex
-        self.mineraldb = self.common.mineraldb
-        self.manualConds = self.common.manualConds #manual space group conditions
-        
                 
         self.DiffWidget = matplotlibWidget(self.common,self.Diffraction) #mplwidget can access common data
         #self.DiffWidget.setStyleSheet("font-family: 'Arial Unicode MS', Arial, sans-serif; font-size: 15px;")
@@ -291,7 +278,76 @@ class pyLATTICE_GUI(QtGui.QMainWindow):
     
         #initialize popup IPython console
         #can interact with specific data
-        self.initIPython()
+        self._initIPython(self.common)
+        
+    def _grabCommon(self):
+        """Get all common variables."""
+        self.common = common()
+        self._overline_strings = self.common._overline_strings
+        self.DSpaces = self.common.DSpaces
+        self.ZoneAxis = self.common.ZoneAxis
+        self.u = self.common.u
+        self.v = self.common.v
+        self.w = self.common.w
+        
+        #lattice parameters and angles
+        self.a = self.common.a
+        self.b = self.common.b
+        self.c = self.common.c
+        self.astar = self.common.astar
+        self.bstar = self.common.bstar
+        self.cstar = self.common.cstar
+        self.alpha = self.common.alpha
+        self.beta = self.common.beta
+        self.gamma = self.common.gamma
+        self.alphastar = self.common.alphastar
+        self.betastar = self.common.betastar
+        self.gammastar = self.common.gammastar
+        
+        #TEM params
+        self.beamenergy = self.common.beamenergy
+        self.camlength = self.common.camlength
+        self.camconst = self.common.camconst
+        self.wavelength = self.common.wavelength
+        
+        #SpaceGroup data
+        self.sg = self.common.sg
+        self.sghex = self.common.sghex
+        self.mineraldb = self.common.mineraldb
+        self.manualConds = self.common.manualConds #manual space group conditions
+        
+    def updateCommon(self):
+        """Update all of the common variables and push these to the IPython console"""
+        self.common.DSpaces = self.DSpaces
+        self.common.ZoneAxis = self.ZoneAxis
+        self.common.u = self.u
+        self.common.v = self.v
+        self.common.w = self.w
+        
+        self.common.a = self.a
+        self.common.b = self.b
+        self.common.c = self.c
+        self.common.astar = self.astar
+        self.common.bstar = self.bstar
+        self.common.cstar = self.cstar
+        self.common.alpha = self.alpha
+        self.common.beta = self.beta
+        self.common.gamma = self.gamma
+        self.common.alphastar = self.alphastar
+        self.common.betastar = self.betastar
+        self.common.gammastar = self.gammastar
+        
+        #mineral database and manual conditions
+        #self.mineraldb = self.common.mineraldb
+        self.common.manualConds = self.manualConds #manual space group conditions
+        
+        self.common.beamenergy = self.beamenergy = self.spinBox_beamenergy.value()
+        self.common.camlength = self.camlength = self.spinBox_camlength.value()
+        self.common.camconst = self.camconst = self.doubleSpinBox_camconst.value()
+        self.common.wavelength = self.wavelength = self.common.Wavelength(self.beamenergy)
+        
+        self.updateIPY(self.common)
+        
         
     @QtCore.pyqtSlot(str,str,str,str)
     def on_distances_sent(self,recip_d, real_d, film_d, angle):
@@ -386,9 +442,9 @@ class pyLATTICE_GUI(QtGui.QMainWindow):
         QtCore.QObject.connect(self.hSlider_gamma, QtCore.SIGNAL(_fromUtf8("sliderReleased()")), self.D_Spacings)
         
         #Spinboxes beam energy, cam length, camconst
-        QtCore.QObject.connect(self.spinBox_beamenergy,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.update_common)
-        QtCore.QObject.connect(self.spinBox_camlength,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.update_common)
-        QtCore.QObject.connect(self.doubleSpinBox_camconst,QtCore.SIGNAL(_fromUtf8("valueChanged(double)")),self.update_common)
+        QtCore.QObject.connect(self.spinBox_beamenergy,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.updateCommon)
+        QtCore.QObject.connect(self.spinBox_camlength,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.updateCommon)
+        QtCore.QObject.connect(self.doubleSpinBox_camconst,QtCore.SIGNAL(_fromUtf8("valueChanged(double)")),self.updateCommon)
         
         #Instances to recalculate metric tensor and d-spacings
         #only enable these once you get miller maxes sorted out so they don't change
@@ -411,39 +467,24 @@ class pyLATTICE_GUI(QtGui.QMainWindow):
         QtCore.QObject.connect(self.checkBox_normals, QtCore.SIGNAL(_fromUtf8("toggled(bool)")),self.CalcLabels)
         QtCore.QObject.connect(self.command_angle, QtCore.SIGNAL(_fromUtf8("clicked()")),self.Calculator)
         
-    def initIPython(self):
+    def _initIPython(self,common):
         """Initialize IPython console from which the user can interact with data/files"""
-        self.ipywidget = IPythonConsole()
-        banner = """Welcome to the IPython Console.
-You are here to interact with pyLATTICE data.
-Use the 'whos' command for information.
+        
+        banner = """Welcome to the IPython Qt4 Console.
+You are here to interact with SIMS data.
+Use the 'whos' command for a list of available variables. Sometimes this does not work the first time.
 
-Imported packages include: numpy as np; pandas as pd; pyplot as plt
+Imported packages include: pylab (including numpy modules) as 'pl'; pandas as 'pd'
 \n"""
-        self.ipyConsole = QIPythonWidget(customBanner=banner)
-        self.ipywidget.layout.addWidget(self.ipyConsole)
-        self.ipyConsole.executeCommand('import numpy as np;import pandas as pd;import matplotlib.pyplot as plt')
-
-        #data to interact with
-        self.updateIPY()
-        self.ipyConsole.printText("The variables %s are available." % ', '.join(list(self.ipyvars.keys()))) 
-        
-        
+        self.ipywidget = IPythonConsole(common,banner=banner)
     
     def IPY(self):
-        self.ipywidget.show()
+        self.ipywidget.SHOW()
     
-    def updateIPY(self):
-        self.ipyvars = {"DSpaces":self.DSpaces,
-                     "MTensor":self.G,
-                     "MTensor_inv":self.G_inv}
-        self.ipyConsole.pushVariables(self.ipyvars)
+    def updateIPY(self,common):
+        self.ipyvars = common.__dict__
+        self.ipywidget.pushVariables(self.ipyvars)
         
-    def update_common(self):
-        self.common.beamenergy = self.spinBox_beamenergy.value()
-        self.common.camlength = self.spinBox_camlength.value()
-        self.common.camconst = self.doubleSpinBox_camconst.value()
-        self.common.wavelength = self.common.Wavelength(self.common.beamenergy)
     
     def slider_to_spindouble(self,slider):
         """Sliders only send/receive int data.  Converts int to double by dividing by 100."""
@@ -885,7 +926,7 @@ Imported packages include: numpy as np; pandas as pd; pyplot as plt
             pass
         
         try:
-            self.updateIPY()
+            self.updateCommon()
         except AttributeError: #first go round ipython console hasn't been initialized yet
             pass
 
@@ -1111,7 +1152,7 @@ Imported packages include: numpy as np; pandas as pd; pyplot as plt
             for i in range(len(self.Forbidden)):
                 label = ' '.join([str(int(x)) for x in self.Forbidden.loc[i,['h','k','l']]]) #this is a bit dense, but makes a list of str() hkl values, then concatenates
                 #convert negative numbers to overline numbers for visual effect
-                for j,num in enumerate(self.overline_strings):
+                for j,num in enumerate(self._overline_strings):
                     match = re.search(u'-%d' % (j+1),label)
                     if match:
                         label = re.sub(match.group(),num,label)
@@ -1125,7 +1166,7 @@ Imported packages include: numpy as np; pandas as pd; pyplot as plt
         for i in range(len(self.DSpaces)):
             label = ' '.join([str(int(x)) for x in self.DSpaces.loc[i,['h','k','l']]]) #this is a bit dense, but makes a list of str() hkl values, then concatenates
             #convert negative numbers to overline numbers for visual effect
-            for j,num in enumerate(self.overline_strings):
+            for j,num in enumerate(self._overline_strings):
                 match = re.search(u'-%d' % (j+1),label)
                 if match:
                     label = re.sub(match.group(),num,label)

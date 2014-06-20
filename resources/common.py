@@ -12,7 +12,7 @@ class common:
     def __init__(self):
         self.path = os.path.expanduser('~')
         #\u0305 is unicode overline character
-        self.overline_strings = [u'1\u0305', u'2\u0305' ,u'3\u0305', u'4\u0305', u'5\u0305', u'6\u0305', u'7\u0305',u'8\u0305',u'9\u0305']
+        self._overline_strings = [u'1\u0305', u'2\u0305' ,u'3\u0305', u'4\u0305', u'5\u0305', u'6\u0305', u'7\u0305',u'8\u0305',u'9\u0305']
         self.DSpaces = pd.DataFrame(columns = ['d-space','h','k','l']) #Msum is sum of absolute miller indices, neede for plotting pattern
         self.Forbidden = pd.DataFrame(columns = ['d-space','h','k','l'])
         self.u = 0
@@ -25,8 +25,19 @@ class common:
         self.camconst = 1.0
         self.wavelength = self.Wavelength(self.beamenergy) #angstroms
         
-        self.x2 = False
+        self._x2 = False
         self.a = 1
+        self.b = 1
+        self.c = 1
+        self.astar = 1
+        self.bstar = 1
+        self.cstar = 1
+        self.alpha = 90 #degrees
+        self.beta = 90
+        self.gamma = 90
+        self.alphastar = 90
+        self.betastar = 90
+        self.gammastar = 90
         
         #SpaceGroup data
         #DataFrame in the form SG Number, Patterson symbol, Geometry,Unit Cell Type, Unit Cell Conditions , Spacegroup conditions

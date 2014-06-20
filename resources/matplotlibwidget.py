@@ -108,7 +108,7 @@ class matplotlibWidget(QtGui.QWidget):
             thisline = event.artist
             
             if self.x1 == None:
-                if self.common.x2:
+                if self.common._x2:
                     #Remove recently done circles
                     self.arr.remove()
                     del self.arr
@@ -117,7 +117,7 @@ class matplotlibWidget(QtGui.QWidget):
                     l = self.canvas.ax.lines.pop(-1)
                     del l
                     self.canvas.draw()
-                    self.common.x2=False
+                    self.common._x2=False
                 self.x1 = thisline.get_xdata()
                 self.y1 = thisline.get_ydata()
                 self.ind1 = event.ind[0]
@@ -127,10 +127,10 @@ class matplotlibWidget(QtGui.QWidget):
                 
             elif self.x1 != None:
                 self.update(self.common,self.Diffraction)
-                self.common.x2 = True
+                self.common._x2 = True
                 self.ind2 = event.ind[0]
                 #make names shorter
-                #x1 = self.x1[self.ind1]; x2 = self.x2[self.ind2]; y1 = self.y1[self.ind1]; y2 = self.y2[self.ind2]
+                #x1 = self.x1[self.ind1]; x2 = self._x2[self.ind2]; y1 = self.y1[self.ind1]; y2 = self.y2[self.ind2]
                 recip_d, real_d,film_d, angle, p1, p2 = self.calc(self.ind1,self.ind2)
                 
                 #reset x1 and y1
