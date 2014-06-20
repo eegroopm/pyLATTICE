@@ -470,8 +470,8 @@ class pyLATTICE_GUI(QtGui.QMainWindow):
     def _initIPython(self,common):
         """Initialize IPython console from which the user can interact with data/files"""
         
-        banner = """Welcome to the IPython Qt4 Console.
-You are here to interact with SIMS data.
+        banner = """Welcome to the pyLATTICE IPython Qt4 Console.
+You are here to interact with data and parameters - Python command line knowledge required.
 Use the 'whos' command for a list of available variables. Sometimes this does not work the first time.
 
 Imported packages include: pylab (including numpy modules) as 'pl'; pandas as 'pd'
