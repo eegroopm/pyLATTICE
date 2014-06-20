@@ -1875,15 +1875,15 @@ p, li { white-space: pre-wrap; }
            <rect>
             <x>10</x>
             <y>50</y>
-            <width>185</width>
-            <height>195</height>
+            <width>200</width>
+            <height>200</height>
            </rect>
           </property>
          </widget>
          <widget class="QLabel" name="label">
           <property name="geometry">
            <rect>
-            <x>10</x>
+            <x>20</x>
             <y>0</y>
             <width>191</width>
             <height>31</height>
@@ -1900,17 +1900,17 @@ p, li { white-space: pre-wrap; }
          <widget class="QWidget" name="Gwidget_inv" native="true">
           <property name="geometry">
            <rect>
-            <x>200</x>
+            <x>230</x>
             <y>50</y>
-            <width>185</width>
-            <height>195</height>
+            <width>200</width>
+            <height>200</height>
            </rect>
           </property>
          </widget>
          <widget class="QLabel" name="label_2">
           <property name="geometry">
            <rect>
-            <x>200</x>
+            <x>240</x>
             <y>0</y>
             <width>191</width>
             <height>31</height>
@@ -1927,10 +1927,10 @@ p, li { white-space: pre-wrap; }
          <widget class="Line" name="line">
           <property name="geometry">
            <rect>
-            <x>187</x>
+            <x>210</x>
             <y>0</y>
             <width>20</width>
-            <height>441</height>
+            <height>471</height>
            </rect>
           </property>
           <property name="orientation">
@@ -1940,7 +1940,7 @@ p, li { white-space: pre-wrap; }
          <widget class="QLabel" name="label_3">
           <property name="geometry">
            <rect>
-            <x>10</x>
+            <x>20</x>
             <y>24</y>
             <width>191</width>
             <height>31</height>
@@ -1957,7 +1957,7 @@ p, li { white-space: pre-wrap; }
          <widget class="QLabel" name="label_4">
           <property name="geometry">
            <rect>
-            <x>190</x>
+            <x>240</x>
             <y>24</y>
             <width>191</width>
             <height>31</height>
@@ -1974,10 +1974,10 @@ p, li { white-space: pre-wrap; }
          <widget class="Line" name="line_2">
           <property name="geometry">
            <rect>
-            <x>380</x>
+            <x>430</x>
             <y>0</y>
             <width>20</width>
-            <height>621</height>
+            <height>671</height>
            </rect>
           </property>
           <property name="orientation">
@@ -1988,26 +1988,26 @@ p, li { white-space: pre-wrap; }
           <property name="geometry">
            <rect>
             <x>10</x>
-            <y>250</y>
-            <width>185</width>
-            <height>195</height>
+            <y>260</y>
+            <width>200</width>
+            <height>200</height>
            </rect>
           </property>
          </widget>
          <widget class="QWidget" name="Gparams_inv" native="true">
           <property name="geometry">
            <rect>
-            <x>200</x>
-            <y>250</y>
-            <width>185</width>
-            <height>195</height>
+            <x>230</x>
+            <y>260</y>
+            <width>200</width>
+            <height>200</height>
            </rect>
           </property>
          </widget>
          <widget class="QLabel" name="label_7">
           <property name="geometry">
            <rect>
-            <x>390</x>
+            <x>400</x>
             <y>0</y>
             <width>271</width>
             <height>31</height>
@@ -2024,10 +2024,10 @@ p, li { white-space: pre-wrap; }
          <widget class="QWidget" name="dSpace_table" native="true">
           <property name="geometry">
            <rect>
-            <x>400</x>
+            <x>450</x>
             <y>30</y>
-            <width>451</width>
-            <height>571</height>
+            <width>400</width>
+            <height>631</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -2035,6 +2035,19 @@ p, li { white-space: pre-wrap; }
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+         </widget>
+         <widget class="Line" name="line_3">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>460</y>
+            <width>441</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </widget>

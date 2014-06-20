@@ -102,9 +102,9 @@ class ManualConditionsDialog(QDialog):
         else:
             cond += '(%s == %i)' % (if1,ifVal1)
             if ifand1:
-                cond += ' & (%s == %i)' % (self.IF2.currentText(),ifVal2.value())
+                cond += ' & (%s == %i)' % (self.IF2.currentText(),self.ifVal2.value())
             if ifand2:
-                cond += ' & (%s == %i)' % (self.IF3.currentText(),ifVal3.value())
+                cond += ' & (%s == %i)' % (self.IF3.currentText(),self.ifVal3.value())
             cond += ': '
         
         then1 = self.THEN1.currentText()

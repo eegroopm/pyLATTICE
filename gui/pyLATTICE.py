@@ -157,7 +157,7 @@ class pyLATTICE_GUI(QtGui.QMainWindow):
         
         
         #Initialize Metric tensor Tables
-        self.Gtable_size = (185,195)
+        self.Gtable_size = (200,200)
         self.Gtable = TableWidget(self.Gwidget)
         self.Gtable.resize(self.Gtable_size[0],self.Gtable_size[1])
         self.G_inv_table = TableWidget(self.Gwidget_inv)
@@ -173,7 +173,7 @@ class pyLATTICE_GUI(QtGui.QMainWindow):
         self.a = 1; self.b=1; self.c=1
         
         #Initialize parameter tables
-        self.param_table_size = (185,195)
+        self.param_table_size = (200,200)
         self.Gparam_table = TableWidget(self.Gparams)
         self.Gparam_inv_table = TableWidget(self.Gparams_inv)
         self.Gparam_table.resize(self.param_table_size[0],self.param_table_size[1])
@@ -192,14 +192,13 @@ class pyLATTICE_GUI(QtGui.QMainWindow):
             self.Gparam_inv_table.setRowHeight(i,self.param_table_size[0]/6.7)
         
         #D-spacing table
-        self.dspace_table_size = (261,581)
+        self.dspace_table_size = (400,630)
         self.dspace_table = TableWidget(self.dSpace_table)
         self.dspace_table.resize(self.dspace_table_size[0],self.dspace_table_size[1])
         self.dspace_table.setData(np.array([[0,0,0,0]]))
         self.dspace_table.setHorizontalHeaderLabels(['d-space','h','k','l'])
         self.dspace_table.setColumnWidth(0,80)
         for i in range(1,4):
-            self.dspace_table.setColumnWidth(i,47)
         
         # Set miller indices
         self.miller_indices = [str(x) for x in range(-6,7)]
