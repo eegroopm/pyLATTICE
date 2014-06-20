@@ -158,12 +158,15 @@ class pyLATTICE_GUI(QtGui.QMainWindow):
         
         #Initialize Metric tensor Tables
         self.Gtable_size = (200,200)
-        self.Gtable = TableWidget(self.Gwidget)
+        self.Gtable = TableWidget()
+        self.G_inv_table = TableWidget()
+        self.tensorlayout.addWidget(self.Gtable,2,0) #third row, first column
+        self.tensorlayout.addWidget(self.G_inv_table,2,1)
         self.Gtable.resize(self.Gtable_size[0],self.Gtable_size[1])
-        self.G_inv_table = TableWidget(self.Gwidget_inv)
         self.G_inv_table.resize(self.Gtable_size[0],self.Gtable_size[1])
         self.Gtable.setData(np.eye(3))
         self.G_inv_table.setData(np.eye(3))
+        
         for i in range(3):
             self.Gtable.setColumnWidth(i,self.Gtable_size[0]/4)
             self.Gtable.setRowHeight(i,self.Gtable_size[1]/3.5)
@@ -174,8 +177,8 @@ class pyLATTICE_GUI(QtGui.QMainWindow):
         
         #Initialize parameter tables
         self.param_table_size = (200,200)
-        self.Gparam_table = TableWidget(self.Gparams)
-        self.Gparam_inv_table = TableWidget(self.Gparams_inv)
+        self.Gparam_table = TableWidget()
+        self.Gparam_inv_table = TableWidget()
         self.Gparam_table.resize(self.param_table_size[0],self.param_table_size[1])
         self.Gparam_inv_table.resize(self.param_table_size[0],self.param_table_size[1])
         initdat = np.transpose(np.array([[1,1,1,90,90,90]]))
@@ -185,6 +188,8 @@ class pyLATTICE_GUI(QtGui.QMainWindow):
         self.Gparam_inv_table.setHorizontalHeaderLabels(['Parameters'])
         self.Gparam_table.setVerticalHeaderLabels([u'a',u'b',u'c',u'\u03B1',u'\u03B2',u'\u03B3'])
         self.Gparam_inv_table.setVerticalHeaderLabels([u'a*',u'b*',u'c*',u'\u03B1*',u'\u03B2*',u'\u03B3*'])
+        self.tensorlayout.addWidget(self.Gparam_table,3,0) 
+        self.tensorlayout.addWidget(self.Gparam_inv_table,3,1)
         for i in range(0,6):
             self.Gparam_table.setColumnWidth(i,self.param_table_size[0])
             self.Gparam_table.setRowHeight(i,self.param_table_size[0]/6.7)
@@ -193,12 +198,14 @@ class pyLATTICE_GUI(QtGui.QMainWindow):
         
         #D-spacing table
         self.dspace_table_size = (400,630)
-        self.dspace_table = TableWidget(self.dSpace_table)
+        self.dspace_table = TableWidget()
         self.dspace_table.resize(self.dspace_table_size[0],self.dspace_table_size[1])
         self.dspace_table.setData(np.array([[0,0,0,0]]))
         self.dspace_table.setHorizontalHeaderLabels(['d-space','h','k','l'])
+        self.dspacelayout.addWidget(self.dspace_table)
         self.dspace_table.setColumnWidth(0,80)
         for i in range(1,4):
+            self.dspace_table.setColumnWidth(i,50)
         
         # Set miller indices
         self.miller_indices = [str(x) for x in range(-6,7)]
