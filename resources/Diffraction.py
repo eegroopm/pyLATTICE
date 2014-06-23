@@ -23,7 +23,7 @@ class Diffraction:
     def __init__(self):
         pass
     
-    def PlaneAngle(self,p1= np.array([0,0,0]), p2= np.array([0,0,0])):
+    def PlaneAngle(self,p1= np.array([0,0,0]), p2= np.array([0,0,0]),hex=False):
         """Calculates angle between two planes (h1 k1 l1) & (h2 k2 l2) OR
         between two directions [U1 V1 W1] & [U2 V2 W2].
         
@@ -31,6 +31,9 @@ class Diffraction:
         """
         #numerator = p1[0]*p2[0] + p1[1]*p2[1] + p1[2]*p2[2]
         #denominator = np.sqrt(p1[0]**2 + p1[1]**2 + p1[2]**2)*np.sqrt(p2[0]**2 + p2[1]**2 + p2[2]**2)
+        if hex: #if hexagonal, add i index
+            p1 = np.insert(p1,2,-(p1[0] + p1[1]))
+            p2 = np.insert(p2,2,-(p2[0] + p2[1]))
         numerator = np.dot(p2,p1)
         #if p2 is a multi-row set of directions, indicate the axis to calculate along
         if len(np.shape(p2)) > 1:

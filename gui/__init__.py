@@ -10,12 +10,17 @@ __maintainer__  = 'Evan Groopman'
 __email__       = 'eegroopm@gmail.com'
 
 # define version information
-__version_info__    = (0, 2,12)
+__version_info__    = (0, 2,13)
 __version__         = 'v%i.%01i.%03i' % __version_info__
 __revision__        = __version__
 
 """
 Changelog:
+v0.2.13 - 6/23/2014
+- Angle calculator now accepts hexagonal bases. Don't know why I forgot to input that before.
+- New lineEdit that nicely displays the lattice planes/directions with brackets or parentheses
+    and a unicode angle character. Updates to a 4-vector when 'hexagonal' chosen.
+
 v0.2.12 - 6/20/2014
 - Completely redone IPython console. Varialbles are now pushed to the console any time the GUI updates.
 - Some variables that the user doesn't need to interact with are now hidden.

@@ -85,12 +85,12 @@ class matplotlibWidget(QtGui.QWidget):
         p1 = list(self.DSpaces.loc[ind1,['x','y']])
         p2 = list(self.DSpaces.loc[ind2,['x','y']])
         
-        recip_d = round(np.sqrt((p2[0]-p1[0])**2 + (p2[1]-p1[1])**2),2) #calc distance
-        real_d = 1/recip_d
+        recip_d = round(np.sqrt((p2[0]-p1[0])**2 + (p2[1]-p1[1])**2),3) #calc distance
+        real_d = 1.0/recip_d
         film_d = self.lam*self.L/real_d*self.const
         
         #angle = round(np.degrees(self.Diffraction.AngleAmbiguity(p2[0]-p1[0],p2[1]-p1[1])),1)
-        angle = round(np.degrees(np.arctan2((p2[1]-p1[1]),(p2[0]-p1[0]))),1)
+        angle = round(np.degrees(np.arctan2((p2[1]-p1[1]),(p2[0]-p1[0]))),2)
         
         return recip_d, real_d,film_d, angle, p1, p2
         

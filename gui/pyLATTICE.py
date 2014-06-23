@@ -1240,16 +1240,36 @@ Imported packages include: pylab (including numpy modules) as 'pl'; pandas as 'p
         k2 = int(self.comboBox_k2.currentText())
         l1 = int(self.comboBox_l1.currentText())
         l2 = int(self.comboBox_l2.currentText())
-        angle = round(np.degrees(self.Diffraction.PlaneAngle(p1=[h1,k1,l1],p2=[h2,k2,l2])),2)
+        i1 = -(h1+k1)
+        i2 = -(h2+k2)
+        hex = self.checkBox_hexagonal.isChecked()
+        angle = round(np.degrees(self.Diffraction.PlaneAngle(p1=np.array([h1,k1,l1]),p2=np.array([h2,k2,l2]),hex=hex)),2)
         if np.isnan(angle):
             QtGui.QMessageBox.information(self, "Uh, Oh!", 'There is no [0 0 0] direction/plane!')
         else:
             if self.checkBox_normals.isChecked():
                 self.lineEdit_angle.setText(u'φ = %.2f°' % angle)
+                bra = u'('
+                ket = u')'
                 
             elif not self.checkBox_normals.isChecked():
                 self.lineEdit_angle.setText(u'ρ = %.2f°' % angle)
-        
+                bra = u'['
+                ket = u']'
+            
+            if hex == False:
+                hkls = [bra,h1,k1,l1,ket,bra,h2,k2,l2,ket]
+                for j,it in enumerate(hkls):
+                    if type(it) == int and it < 0:
+                        hkls[j] = self._overline_strings[abs(it)-1]
+                        
+                self.lineEdit_dirs.setText(u'%s%s%s%s%s \u2220 %s%s%s%s%s' % tuple(hkls))
+            else:
+                hkls = [bra,h1,k1,i1,l1,ket,bra,h2,k2,i2,l2,ket]
+                for j,it in enumerate(hkls):
+                    if type(it) == int and it < 0:
+                        hkls[j] = self._overline_strings[abs(it)-1]
+                self.lineEdit_dirs.setText(u'%s%s%s%s%s%s \u2220 %s%s%s%s%s%s' % tuple(hkls))
 
     def CalcLabels(self):
         """Rewrite labels for aesthetics"""

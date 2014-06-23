@@ -2294,9 +2294,9 @@ p, li { white-space: pre-wrap; }
           <property name="geometry">
            <rect>
             <x>10</x>
-            <y>40</y>
+            <y>20</y>
             <width>211</width>
-            <height>211</height>
+            <height>281</height>
            </rect>
           </property>
           <property name="font">
@@ -2320,7 +2320,7 @@ p, li { white-space: pre-wrap; }
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>50</y>
+             <y>80</y>
              <width>51</width>
              <height>21</height>
             </rect>
@@ -2345,7 +2345,7 @@ p, li { white-space: pre-wrap; }
            <property name="geometry">
             <rect>
              <x>80</x>
-             <y>50</y>
+             <y>80</y>
              <width>51</width>
              <height>21</height>
             </rect>
@@ -2373,7 +2373,7 @@ p, li { white-space: pre-wrap; }
            <property name="geometry">
             <rect>
              <x>140</x>
-             <y>70</y>
+             <y>100</y>
              <width>51</width>
              <height>22</height>
             </rect>
@@ -2393,7 +2393,7 @@ p, li { white-space: pre-wrap; }
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>70</y>
+             <y>100</y>
              <width>51</width>
              <height>22</height>
             </rect>
@@ -2419,7 +2419,7 @@ p, li { white-space: pre-wrap; }
            <property name="geometry">
             <rect>
              <x>80</x>
-             <y>70</y>
+             <y>100</y>
              <width>51</width>
              <height>22</height>
             </rect>
@@ -2439,7 +2439,7 @@ p, li { white-space: pre-wrap; }
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>100</y>
+             <y>130</y>
              <width>51</width>
              <height>22</height>
             </rect>
@@ -2465,7 +2465,7 @@ p, li { white-space: pre-wrap; }
            <property name="geometry">
             <rect>
              <x>140</x>
-             <y>100</y>
+             <y>130</y>
              <width>51</width>
              <height>22</height>
             </rect>
@@ -2491,7 +2491,7 @@ p, li { white-space: pre-wrap; }
            <property name="geometry">
             <rect>
              <x>80</x>
-             <y>100</y>
+             <y>130</y>
              <width>51</width>
              <height>22</height>
             </rect>
@@ -2514,7 +2514,7 @@ p, li { white-space: pre-wrap; }
            <property name="geometry">
             <rect>
              <x>140</x>
-             <y>50</y>
+             <y>80</y>
              <width>51</width>
              <height>21</height>
             </rect>
@@ -2540,7 +2540,7 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>20</x>
              <y>30</y>
-             <width>81</width>
+             <width>171</width>
              <height>23</height>
             </rect>
            </property>
@@ -2551,7 +2551,7 @@ p, li { white-space: pre-wrap; }
             </font>
            </property>
            <property name="text">
-            <string>Normals</string>
+            <string>Plane Normals</string>
            </property>
            <property name="checked">
             <bool>true</bool>
@@ -2561,7 +2561,7 @@ p, li { white-space: pre-wrap; }
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>130</y>
+             <y>160</y>
              <width>171</width>
              <height>41</height>
             </rect>
@@ -2577,7 +2577,45 @@ p, li { white-space: pre-wrap; }
            <property name="geometry">
             <rect>
              <x>20</x>
-             <y>170</y>
+             <y>240</y>
+             <width>171</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="checkBox_hexagonal">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>50</y>
+             <width>171</width>
+             <height>23</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check this box for a hexagonal basis. i = - (h + k)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Hexagonal</string>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="lineEdit_dirs">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>210</y>
              <width>171</width>
              <height>30</height>
             </rect>
