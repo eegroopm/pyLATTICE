@@ -14,11 +14,12 @@ pyLATTICE requires a number of dependencies. Below are the development versions 
 - h5py 2.2.1
 - lxml 3.3.0
 - matplotlib 1.3.1
+- numexpr 2.0
 - numpy 1.8.0
 - openpyxl 1.8.5
 - pandas 0.13.1
 - six 1.5.2
-- talbes 3.0.0
+- tables 3.0.0
 - xlwt 0.7.5
 
 Usage
