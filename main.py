@@ -1,4 +1,4 @@
-#!/usr/bin/python ~/Documents/Research/Spyder\ Projects/pyLATTICE/main.py
+#!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 """ 
 pyLATTICE is...
@@ -15,7 +15,11 @@ __license__     = 'GPL'
 __maintainer__  = 'Evan Groopman'
 __email__       = 'eegroopm@gmail.com'
 
-
+import sys
+if sys.version_info[0] == 3:
+    import sip
+    sip.setapi("QString", 2)
+    sip.setapi("QVariant", 2)
 from PyQt4 import QtGui
 
 def main(argv = None):

@@ -31,10 +31,10 @@ def CalcSpots(np.ndarray d, np.ndarray Q2, np.ndarray ref, np.ndarray recip_vec,
 
 	q1 = ref * recip_vec
 	q2 = Q2 * recip_vec
-
+	
 	#cos = np.ravel(ref.dot(Ginv).dot(Q2.T))/(np.linalg.norm(ref)*np.linalg.norm(Q2,axis=1))
-	cos = ref.dot(Q2.T)/(np.linalg.norm(ref)*np.linalg.norm(Q2,axis=1))
-	sin = np.cross(q1,q2).dot(dir_vec)/(np.linalg.norm(ref)*np.linalg.norm(Q2,axis=1))
+	cos = q1.dot(q2.T)/(np.linalg.norm(q1)*np.linalg.norm(q2,axis=1))
+	sin = np.cross(q1,q2).dot(dir_vec)/(np.linalg.norm(q1)*np.linalg.norm(q2,axis=1))
 
 	#theta = np.arctan2(sin,cos)
 	for i in range(len(cos)):

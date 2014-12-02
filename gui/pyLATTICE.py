@@ -1,4 +1,4 @@
-#!/usr/bin/python ~/Documents/Research/Spyder\ Projects/pyLATTICE/
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """ 
 pyLATTICE is...
@@ -25,17 +25,16 @@ Created on Wed Apr 11 14:46:56 2012
 
 """
 #Main imports
-#import sip
 from PyQt4 import QtCore, QtGui, uic
-import os, re, sys
+import os, sys
 import numpy as np
 import pandas as pd
+import re
 
 
 #Matplotlib imports
 import matplotlib as mpl
 mpl.use('Qt4Agg')
-#import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 
 # Local files in the resource directory
@@ -1085,7 +1084,7 @@ Imported packages include: pylab (including numpy modules) as 'pl'; pandas as 'p
         For each point in self.DSpaces [d-space,h,k,l], determines anlges for plotting."""
         #initialize plot with center spot only
         self.Plot.clear()
-        self.common.x2 = False
+        self.common._x2 = False
         self.Plot.set_xlabel(u'Distance (\u212B\u207B\u00B9)')#angstrom^-1
         self.Plot.set_ylabel(u'Distance (\u212B\u207B\u00B9)')
         

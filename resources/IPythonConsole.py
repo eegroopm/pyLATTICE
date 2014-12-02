@@ -5,6 +5,12 @@ Created on Mon Apr 21 10:32:36 2014
 @author: eegroopm
 """
 import os
+#Try to make IPython work
+os.environ['QT_API'] = 'pyqt'
+import sip
+sip.setapi("QString", 2)
+sip.setapi("QVariant", 2)
+
 from PyQt4.QtGui import QWidget
 #IPython widget stuff
 from IPython.qt.console.rich_ipython_widget import RichIPythonWidget
