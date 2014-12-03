@@ -12,7 +12,11 @@ class common:
     def __init__(self):
         self.path = os.path.expanduser('~')
         #\u0305 is unicode overline character
-        self._overline_strings = [u'1\u0305', u'2\u0305' ,u'3\u0305', u'4\u0305', u'5\u0305', u'6\u0305', u'7\u0305',u'8\u0305',u'9\u0305']
+        #self._overline_strings = [u'1\u0305', u'2\u0305' ,u'3\u0305', u'4\u0305', u'5\u0305', u'6\u0305', u'7\u0305',u'8\u0305',u'9\u0305']
+        #use matplotlib's mathtex rendering for overline strings
+        self._overline_strings = [r'\\bar{1}',r'\\bar{2}',r'\\bar{3}',
+                                  r'\\bar{6}',r'\\bar{5}',r'\\bar{6}',
+                                  r'\\bar{7}',r'\\bar{8}',r'\\bar{9}']
         self.DSpaces = pd.DataFrame(columns = ['d-space','h','k','l']) #Msum is sum of absolute miller indices, neede for plotting pattern
         self.Forbidden = pd.DataFrame(columns = ['d-space','h','k','l'])
         self.u = 0

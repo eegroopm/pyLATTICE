@@ -13,6 +13,7 @@ from matplotlib.patches import Patch, Rectangle, Circle, Arrow
 
 from PyQt4 import QtGui
 from PyQt4.QtCore import pyqtSlot, pyqtSignal
+import six
 
 class MplCanvas(FigureCanvas):
 
@@ -71,7 +72,8 @@ class matplotlibWidget(QtGui.QWidget):
         
     def Plot_initialize(self):
         """Initialize paramters of Matplotlib widget such as axes labels"""
-        label = u'Distance (\u212B\u207B\u00B9)'
+        #label = u'Distance (\u212B\u207B\u00B9)'
+        label = r'Distance ($\AA^{-1}$)' #use matplotlib's mathtex rendering: Å⁻¹
         self.canvas.ax.set_xlabel(label,fontsize=14)
         self.canvas.ax.set_ylabel(label,fontsize=14)
         self.canvas.ax.tick_params(axis='both', which='major', labelsize=14, length=6)

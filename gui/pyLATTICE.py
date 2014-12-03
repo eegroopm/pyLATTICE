@@ -87,8 +87,8 @@ if sys.platform == 'win32':
 #    mpl.rc('font',**{'sans-serif' : 'Bitstream Vera Sans','family' : 'sans-serif'})
 #use LaTeX to render symbols
 #plt.rc('text', usetex=True)
-#mpl.rcParams['mathtext.default'] = 'regular'
-##mpl.rcParams['text.latex.preamble'] = [r'\usepackage{textcomp}']
+mpl.rcParams['mathtext.default'] = 'regular'
+#mpl.rcParams['text.latex.preamble'] = [r'\usepackage{textcomp}']
 #mpl.rcParams['text.latex.unicode'] = True 
 
 #Other
@@ -1002,6 +1002,11 @@ Imported packages include: pylab (including numpy modules) as 'pl'; pandas as 'p
                 name = 'Mineral'
             if sym == '':
                 sym = 'XX'
+            #set special conditions to a bunch of strings or as a NaN
+            if self.manualConds == []:
+                SCs = np.nan
+            else:
+                SCs = ';'.join(self.manualConds)
             params = {'Name':name, 'Chemical':sym,
                       'Crystal':self.comboBox_crystaltype.currentText(),
                       'UnitCell':self.comboBox_celltype.currentText(),
@@ -1009,7 +1014,7 @@ Imported packages include: pylab (including numpy modules) as 'pl'; pandas as 'p
                       'a':self.doubleSpinBox_a.value(),
                       'b':self.doubleSpinBox_b.value(),
                       'c':self.doubleSpinBox_c.value(),
-                      'SpecialConditions':';'.join(self.manualCond)}
+                      'SpecialConditions':SCs}
             self.mineraldb = self.mineraldb.append(params,ignore_index=True)
         
             self.setMineralList()
@@ -1163,7 +1168,7 @@ Imported packages include: pylab (including numpy modules) as 'pl'; pandas as 'p
         #print(self.DSpaces)
         #make label for each spot
         for i in range(len(self.DSpaces)):
-            label = ' '.join([str(int(x)) for x in self.DSpaces.loc[i,['h','k','l']]]) #this is a bit dense, but makes a list of str() hkl values, then concatenates
+            label = r' '.join([str(int(x)) for x in self.DSpaces.loc[i,['h','k','l']]]) #this is a bit dense, but makes a list of str() hkl values, then concatenates
             #convert negative numbers to overline numbers for visual effect
             for j,num in enumerate(self._overline_strings):
                 match = re.search(u'-%d' % (j+1),label)
@@ -1172,11 +1177,12 @@ Imported packages include: pylab (including numpy modules) as 'pl'; pandas as 'p
             #add each label and coordinate to DSpace dataframe
 #            self.DSpaces.loc[i,'x'] = coords[0]
 #            self.DSpaces.loc[i,'y'] = coords[1]
+            label = r'$%s$' % label.replace(' ','\ ') #convert to mathtex string and add spaces
             self.DSpaces.loc[i,'label'] = label
             
 
         #add 000 spot
-        self.DSpaces.loc[len(self.DSpaces),['d-space','h','k','l','x','y','label']] = [0,0,0,0,0,0,'0 0 0']
+        self.DSpaces.loc[len(self.DSpaces),['d-space','h','k','l','x','y','label']] = [0,0,0,0,0,0,r'$0\ 0\ 0$']
         #print(self.DSpaces)
         #scatterplots make it difficult to get data back in matplotlibwidget
 #        for i in range(len(self.DSpaces)):
