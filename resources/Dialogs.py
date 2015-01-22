@@ -13,6 +13,19 @@ import gui
 ###############################################################################
 ## Various Input Dialogs ##
 ###############################################################################
+class SettingsDialog(QDialog):
+    def __init__(self,current_settings,parent=None):
+        QDialog.__init__(self,parent)
+        gui.loadUi(__file__,self)
+        c = current_settings
+        self.maxa.setValue(c['a max'])
+        self.maxb.setValue(c['b max'])
+        self.maxc.setValue(c['c max'])
+        
+        
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
 class MineralListDialog(QDialog):
     def __init__(self,parent=None):
         QDialog.__init__(self,parent)

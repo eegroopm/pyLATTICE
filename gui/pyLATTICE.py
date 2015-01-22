@@ -45,7 +45,8 @@ from resources.Diffraction import Diffraction
 from resources.IPythonConsole import IPythonConsole
 from resources.common import common
 from resources.matplotlibwidget import matplotlibWidget
-from resources.Dialogs import MineralListDialog, NewMineralDialog, ManualConditionsDialog
+from resources.Dialogs import (MineralListDialog, NewMineralDialog, 
+                               ManualConditionsDialog, SettingsDialog)
 
 
 try:
@@ -388,6 +389,7 @@ class pyLATTICE_GUI(QtGui.QMainWindow):
         QtCore.QObject.connect(self.actionAppendMineral, QtCore.SIGNAL(_fromUtf8("triggered()")), self.AppendMineral)
         QtCore.QObject.connect(self.actionIPython_Console, QtCore.SIGNAL(_fromUtf8("triggered()")), self.IPY)
         QtCore.QObject.connect(self.actionManualCond, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ManualConditions)
+        QtCore.QObject.connect(self.actionSettings, QtCore.SIGNAL(_fromUtf8("triggered()")), self.setSettings)
         
         ### Command buttons
         QtCore.QObject.connect(self.command_Plot, QtCore.SIGNAL(_fromUtf8("clicked()")),self.PlotDiffraction)
@@ -1019,6 +1021,27 @@ Imported packages include: pylab (including numpy modules) as 'pl'; pandas as 'p
         
             self.setMineralList()
         QtCore.QObject.connect(self.comboBox_mineraldb, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.setMineral)
+        
+    def setSettings(self):
+        """Raise SettingsDialog and pass values to pyLATTICE parameters.
+        Grab current settings first."""
+        current = {'a max':self.doubleSpinBox_a.maximum(),
+                   'b max':self.doubleSpinBox_b.maximum(),
+                   'c max':self.doubleSpinBox_c.maximum()}
+        
+        dial = SettingsDialog(current)
+        if dial.exec_():
+            amax = dial.maxa.value()
+            bmax = dial.maxb.value()
+            cmax = dial.maxc.value()
+            
+            #set slider and spinbox maxima
+            self.doubleSpinBox_a.setMaximum(amax)
+            self.doubleSpinBox_b.setMaximum(bmax)
+            self.doubleSpinBox_c.setMaximum(cmax)
+            self.hSlider_a.setMaximum(int(10*amax))
+            self.hSlider_b.setMaximum(int(10*bmax))
+            self.hSlider_c.setMaximum(int(10*cmax))
         
     def ManualConditions(self):
         """Raise the manual space group conditions dialog"""

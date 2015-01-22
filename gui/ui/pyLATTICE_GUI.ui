@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1150</width>
-    <height>873</height>
+    <height>875</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -2639,7 +2639,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1150</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2650,6 +2650,8 @@ p, li { white-space: pre-wrap; }
     <addaction name="separator"/>
     <addaction name="actionIPython_Console"/>
     <addaction name="actionManualCond"/>
+    <addaction name="actionSettings"/>
+    <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
    <widget class="QMenu" name="menuMinerals">
@@ -2760,6 +2762,14 @@ p, li { white-space: pre-wrap; }
   <action name="actionManualCond">
    <property name="text">
     <string>Set Manual SG Conditions</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+   <property name="toolTip">
+    <string>Change pyLATTICE settings.</string>
    </property>
   </action>
  </widget>
